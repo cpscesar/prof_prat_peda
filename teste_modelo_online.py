@@ -87,6 +87,17 @@ def predict_proba(texts):
     probs = torch.nn.functional.softmax(logits, dim=1)
     return probs.cpu().numpy()
 
+# Função para mapear valores SHAP para cores
+def shap_values_to_colors(values, cmap_name='RdBu'):
+    # Normalizar os valores SHAP para o intervalo entre 0 e 1
+    max_val = np.max(np.abs(values))
+    norm = matplotlib.colors.Normalize(vmin=-max_val, vmax=max_val)
+    # Obter o mapa de cores
+    cmap = matplotlib.cm.get_cmap(cmap_name)
+    # Mapear valores SHAP para cores
+    colors = [matplotlib.colors.rgb2hex(cmap(norm(value))) for value in values]
+    return colors
+
 # Streamlit interface
 st.title("Análise sobre P. Pedag.")
 
@@ -149,20 +160,16 @@ if st.button("Analisar"):
         # # Display the plot in Streamlit
         # st.pyplot(fig)
 
-        # Criar DataFrame
-        df = pd.DataFrame({'Token': tokens, 'SHAP Value': values})
-        
-        # Criar gráfico interativo com Plotly
-        fig = px.bar(df, x='SHAP Value', y='Token', orientation='h',
-                     color='SHAP Value',
-                     color_continuous_scale='RdBu',
-                     labels={'Token': 'Palavra', 'SHAP Value': 'Valor SHAP'},
-                     title='Valores SHAP para Cada Palavra')
-        
-        fig.update_layout(yaxis={'categoryorder':'total ascending'})
-        
-        # Exibir o gráfico no Streamlit
-        st.plotly_chart(fig, use_container_width=True)
+        # Mapear valores SHAP para cores
+        colors = shap_values_to_colors(values)
+
+        # Construir a string HTML
+        html_text = ""
+        for token, color in zip(tokens, colors):
+            html_text += f'<span style="background-color:{color}">{token} </span>'
+
+        # Exibir o texto colorido
+        st.markdown(html_text, unsafe_allow_html=True)
 
 
 
