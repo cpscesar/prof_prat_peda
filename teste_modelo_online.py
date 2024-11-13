@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 import torch
 import shap
@@ -121,7 +122,10 @@ if st.button("Analisar"):
         )
         
         # Display SHAP text plot
-        st_shap(shap.plots.text(shap_values[0]), width=800, height=400)
+        #st_shap(shap.plots.text(shap_values[0]), width=800, height=400)
+        # Capture the SHAP plot as HTML and include JavaScript
+        shap_html = f"<head>{shap.getjs()}</head><body>{shap.plots.text(shap_values[0], display=False)}</body>"
+        components.html(shap_html, height=400)
 
 
 
