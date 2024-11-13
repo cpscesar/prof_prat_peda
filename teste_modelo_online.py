@@ -121,7 +121,7 @@ if st.button("Analisar"):
         )
 
         # Display SHAP text plot
-        st_shap(shap.plots.text(shap_values[0], cmap="coolwarm"), width=800, height=400)
+        st_shap(shap.plots.text(shap_values[0]), width=800, height=400)
 
 
 
