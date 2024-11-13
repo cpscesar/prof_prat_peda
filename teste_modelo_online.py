@@ -10,13 +10,21 @@ from google.cloud import storage
 import os
 import tempfile
 
+import streamlit as st
+from google.cloud import storage
+from google.oauth2 import service_account
+import os
+import tempfile
+
 # Function to download model files from Google Cloud Storage
 def download_model_files():
-    # Set up Google Cloud credentials using Streamlit secrets
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "service_account_key.json"
+    # Load credentials directly from Streamlit secrets
+    credentials = service_account.Credentials.from_service_account_info(
+        st.secrets["gcp_service_account"]
+    )
 
-    # Create the Google Cloud Storage client
-    client = storage.Client()
+    # Create the Google Cloud Storage client using the credentials
+    client = storage.Client(credentials=credentials, project=st.secrets["gcp_service_account"]["project_id"])
     bucket_name = "model_caed"  # Replace with your bucket name
     bucket = client.bucket(bucket_name)
 
