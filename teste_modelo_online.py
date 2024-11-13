@@ -119,18 +119,9 @@ if st.button("Analisar"):
             "- **Intensidade da cor**: quanto mais intensa a tonalidade, maior a influência da palavra para a previsão.\n\n"
             "Palavras em vermelho têm um impacto positivo para a classe atual, enquanto palavras em azul podem indicar menos relevância para esta classe."
         )
-
-        # Customize the SHAP plot with Matplotlib
-        plt.figure()
-        shap.plots.text(shap_values[0], show=False)  # Use show=False to prevent immediate display
-        plt.gca().set_facecolor("white")  # Set the background to white if needed
-        plt.show()
-
-        # Display the plot in Streamlit
-        st.pyplot(plt)
         
         # Display SHAP text plot
-        #st_shap(shap.plots.text(shap_values[0]), width=800, height=400)
+        st_shap(shap.plots.text(shap_values[0]), width=800, height=400)
 
 
 
