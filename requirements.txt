@@ -1,1 +1,10 @@
-streamlit                   # For building the Streamlit app interfacepandas                      # For handling data manipulationtorch                       # For PyTorch, used to load and run the BERT modelshap                        # For SHAP explanationsstreamlit-shap              # For integrating SHAP with Streamlitnumpy                       # For numerical operationsmatplotlib                  # For plotting (used by SHAP for text visualizations)transformers                # For loading the BERT model and tokenizergoogle-cloud-storage        # For accessing files from Google Cloud Storage
+streamlit                   # For building the Streamlit app interface
+pandas                      # For handling data manipulation
+torch                       # For PyTorch, used to load and run the BERT model
+shap                        # For SHAP explanations
+streamlit-shap              # For integrating SHAP with Streamlit
+numpy                       # For numerical operations
+matplotlib                  # For plotting (used by SHAP for text visualizations)
+transformers                # For loading the BERT model and tokenizer
+google-cloud-storage        # For accessing files from Google Cloud Storage
+plotly
