@@ -11,6 +11,7 @@ from transformers import BertTokenizer, BertForSequenceClassification
 from google.cloud import storage
 import os
 import tempfile
+import matplotlib
 
 import streamlit as st
 from google.cloud import storage
