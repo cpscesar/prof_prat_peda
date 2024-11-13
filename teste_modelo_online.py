@@ -1,3 +1,4 @@
+import plotly.express as px
 import streamlit as st
 import streamlit.components.v1 as components
 import pandas as pd
@@ -131,23 +132,37 @@ if st.button("Analisar"):
         tokens = shap_values.data[0]
         values = shap_values.values[0][:, class_id]  # Get SHAP values for the predicted class
 
-        # Create a DataFrame for plotting
+        # # Create a DataFrame for plotting
+        # df = pd.DataFrame({'Token': tokens, 'SHAP Value': values})
+
+        # # Sort the DataFrame by absolute SHAP value
+        # df['abs_SHAP'] = df['SHAP Value'].abs()
+        # df = df.sort_values('abs_SHAP', ascending=True)
+
+        # # Plot using Matplotlib
+        # fig, ax = plt.subplots(figsize=(8, len(tokens) * 0.3))
+        # ax.barh(df['Token'], df['SHAP Value'], color=['red' if x > 0 else 'blue' for x in df['SHAP Value']])
+        # ax.set_xlabel('SHAP Value')
+        # ax.set_title('SHAP Values for Each Token')
+        # plt.tight_layout()
+
+        # # Display the plot in Streamlit
+        # st.pyplot(fig)
+
+        # Criar DataFrame
         df = pd.DataFrame({'Token': tokens, 'SHAP Value': values})
-
-        # Sort the DataFrame by absolute SHAP value
-        df['abs_SHAP'] = df['SHAP Value'].abs()
-        df = df.sort_values('abs_SHAP', ascending=True)
-
-        # Plot using Matplotlib
-        fig, ax = plt.subplots(figsize=(8, len(tokens) * 0.3))
-        ax.barh(df['Token'], df['SHAP Value'], color=['red' if x > 0 else 'blue' for x in df['SHAP Value']])
-        ax.set_xlabel('SHAP Value')
-        ax.set_title('SHAP Values for Each Token')
-        plt.tight_layout()
-
-        # Display the plot in Streamlit
-        st.pyplot(fig)
-
+        
+        # Criar gráfico interativo com Plotly
+        fig = px.bar(df, x='SHAP Value', y='Token', orientation='h',
+                     color='SHAP Value',
+                     color_continuous_scale='RdBu',
+                     labels={'Token': 'Palavra', 'SHAP Value': 'Valor SHAP'},
+                     title='Valores SHAP para Cada Palavra')
+        
+        fig.update_layout(yaxis={'categoryorder':'total ascending'})
+        
+        # Exibir o gráfico no Streamlit
+        st.plotly_chart(fig, use_container_width=True)
 
 
 
