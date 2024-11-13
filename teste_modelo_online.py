@@ -124,7 +124,43 @@ if st.button("Analisar"):
         )
         
         # Display SHAP text plot
-        st_shap(shap.plots.text(shap_values[0]), width=800, height=400)
+        #st_shap(shap.plots.text(shap_values[0]), width=800, height=400)
+
+         # Capture the SHAP plot as HTML
+        shap_html_object = shap.plots.text(shap_values[0], display=False)
+        shap_html = shap_html_object.data
+
+        # Include the necessary JavaScript
+        shap_js = shap.getjs()
+
+        # Define the necessary CSS styles
+        css_styles = """
+        <style>
+        .shap-inline {
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .shap-inline .token {
+            display: inline-block;
+            padding: 0 2px;
+            border-radius: 3px;
+            margin: 0 1px;
+        }
+        .shap-inline .token[data-shap] {
+            background: linear-gradient(
+                to top,
+                rgba(0, 0, 255, calc(-1 * var(--shap))),
+                rgba(255, 0, 0, var(--shap))
+            );
+        }
+        </style>
+        """
+
+        # Combine the JavaScript, CSS, and the plot HTML
+        html = f"<html><head>{shap_js}{css_styles}</head><body>{shap_html}</body></html>"
+
+        # Display in Streamlit
+        components.html(html, height=400, scrolling=True)
 
 
 
