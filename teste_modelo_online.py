@@ -88,17 +88,6 @@ def predict_proba(texts):
     probs = torch.nn.functional.softmax(logits, dim=1)
     return probs.cpu().numpy()
 
-# Função para mapear valores SHAP para cores
-def shap_values_to_colors(values, cmap_name='RdBu'):
-    # Normalizar os valores SHAP para o intervalo entre 0 e 1
-    max_val = np.max(np.abs(values))
-    norm = matplotlib.colors.Normalize(vmin=-max_val, vmax=max_val)
-    # Obter o mapa de cores
-    cmap = matplotlib.cm.get_cmap(cmap_name)
-    # Mapear valores SHAP para cores
-    colors = [matplotlib.colors.rgb2hex(cmap(norm(value))) for value in values]
-    return colors
-
 # Streamlit interface
 st.title("Análise sobre P. Pedag.")
 
@@ -135,42 +124,7 @@ if st.button("Analisar"):
         )
         
         # Display SHAP text plot
-        #st_shap(shap.plots.text(shap_values[0]), width=800, height=400)
-        # Capture the SHAP plot as HTML and include JavaScript
-        #shap_html = f"<head>{shap.getjs()}</head><body>{shap.plots.text(shap_values[0], display=False)}</body>"
-        #components.html(shap_html, height=400)
-
-         # Extract tokens and corresponding SHAP values
-        tokens = shap_values.data[0]
-        values = shap_values.values[0][:, class_id]  # Get SHAP values for the predicted class
-
-        # # Create a DataFrame for plotting
-        # df = pd.DataFrame({'Token': tokens, 'SHAP Value': values})
-
-        # # Sort the DataFrame by absolute SHAP value
-        # df['abs_SHAP'] = df['SHAP Value'].abs()
-        # df = df.sort_values('abs_SHAP', ascending=True)
-
-        # # Plot using Matplotlib
-        # fig, ax = plt.subplots(figsize=(8, len(tokens) * 0.3))
-        # ax.barh(df['Token'], df['SHAP Value'], color=['red' if x > 0 else 'blue' for x in df['SHAP Value']])
-        # ax.set_xlabel('SHAP Value')
-        # ax.set_title('SHAP Values for Each Token')
-        # plt.tight_layout()
-
-        # # Display the plot in Streamlit
-        # st.pyplot(fig)
-
-        # Mapear valores SHAP para cores
-        colors = shap_values_to_colors(values)
-
-        # Construir a string HTML
-        html_text = ""
-        for token, color in zip(tokens, colors):
-            html_text += f'<span style="background-color:{color}">{token} </span>'
-
-        # Exibir o texto colorido
-        st.markdown(html_text, unsafe_allow_html=True)
+        st_shap(shap.plots.text(shap_values[0]), width=800, height=400)
 
 
 
