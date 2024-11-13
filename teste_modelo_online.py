@@ -124,8 +124,29 @@ if st.button("Analisar"):
         # Display SHAP text plot
         #st_shap(shap.plots.text(shap_values[0]), width=800, height=400)
         # Capture the SHAP plot as HTML and include JavaScript
-        shap_html = f"<head>{shap.getjs()}</head><body>{shap.plots.text(shap_values[0], display=False)}</body>"
-        components.html(shap_html, height=400)
+        #shap_html = f"<head>{shap.getjs()}</head><body>{shap.plots.text(shap_values[0], display=False)}</body>"
+        #components.html(shap_html, height=400)
+
+         # Extract tokens and corresponding SHAP values
+        tokens = shap_values.data[0]
+        values = shap_values.values[0][:, class_id]  # Get SHAP values for the predicted class
+
+        # Create a DataFrame for plotting
+        df = pd.DataFrame({'Token': tokens, 'SHAP Value': values})
+
+        # Sort the DataFrame by absolute SHAP value
+        df['abs_SHAP'] = df['SHAP Value'].abs()
+        df = df.sort_values('abs_SHAP', ascending=True)
+
+        # Plot using Matplotlib
+        fig, ax = plt.subplots(figsize=(8, len(tokens) * 0.3))
+        ax.barh(df['Token'], df['SHAP Value'], color=['red' if x > 0 else 'blue' for x in df['SHAP Value']])
+        ax.set_xlabel('SHAP Value')
+        ax.set_title('SHAP Values for Each Token')
+        plt.tight_layout()
+
+        # Display the plot in Streamlit
+        st.pyplot(fig)
 
 
 
