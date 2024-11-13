@@ -16,6 +16,12 @@ from google.oauth2 import service_account
 import os
 import tempfile
 
+import streamlit as st
+from google.cloud import storage
+from google.oauth2 import service_account
+import os
+import tempfile
+
 # Function to download model files from Google Cloud Storage
 def download_model_files():
     # Load credentials directly from Streamlit secrets
@@ -29,7 +35,7 @@ def download_model_files():
     bucket = client.bucket(bucket_name)
 
     # Define the files to download and where to store them
-    files = ["config.json", "special_tokens_map.json", "tokenizer_config.json", "vocab.txt"]
+    files = ["config.json", "special_tokens_map.json", "tokenizer_config.json", "vocab.txt", "model.safetensors"]
     temp_model_dir = tempfile.mkdtemp()  # Temporary directory for model files
 
     # Download each file
