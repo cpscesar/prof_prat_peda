@@ -46,12 +46,13 @@ def download_model_files():
 
     return temp_model_dir
 
+
 # Download model files to a temporary directory
 model_path = download_model_files()
 
 # Initialize the model and tokenizer using the downloaded files
 tokenizer = BertTokenizer.from_pretrained(model_path)
-model = BertForSequenceClassification.from_pretrained(model_path, num_labels=4)
+model = BertForSequenceClassification.from_pretrained(model_path, num_labels=4, from_safetensors=True)
 model.eval()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
