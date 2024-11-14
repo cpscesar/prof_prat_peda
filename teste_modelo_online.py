@@ -88,6 +88,16 @@ def predict_proba(texts):
     probs = torch.nn.functional.softmax(logits, dim=1)
     return probs.cpu().numpy()
 
+
+# Function to map SHAP values to colors
+def shap_values_to_colors(values, cmap_name='RdBu'):
+    max_val = np.max(np.abs(values))
+    norm = matplotlib.colors.Normalize(vmin=-max_val, vmax=max_val)
+    cmap = matplotlib.cm.get_cmap(cmap_name)
+    colors = [matplotlib.colors.rgb2hex(cmap(norm(value))) for value in values]
+    return colors
+
+
 # Streamlit interface
 st.title("Análise sobre P. Pedag.")
 
@@ -125,38 +135,19 @@ if st.button("Analisar"):
         
         # Display SHAP text plot
         #st_shap(shap.plots.text(shap_values[0]), width=800, height=400)
+        # Extract tokens and SHAP values
+        tokens = shap_values.data[0]
+        values = shap_values.values[0][:, class_id]  # Use SHAP values for the predicted class
 
-                # Capture the SHAP plot as HTML
-        shap_html = shap.plots.text(shap_values[0], display=False)
+        # Map SHAP values to colors
+        colors = shap_values_to_colors(values)
 
-        # Include the necessary JavaScript
-        shap_js = shap.getjs()
+        # Create HTML with colored tokens
+        html_tokens = [
+            f'<span style="color:{color}">{token}</span>'
+            for token, color in zip(tokens, colors)
+        ]
+        shap_html = ' '.join(html_tokens)
 
-        # Define the necessary CSS styles
-        css_styles = """
-        <style>
-        .shap {
-            font-family: monospace;
-            white-space: pre-wrap;
-        }
-        .shap .shap-value {
-            display: inline-block;
-            padding: 0 2px;
-            border-radius: 3px;
-            margin: 0 1px;
-        }
-        .shap .shap-value[data-shap-value] {
-            background: linear-gradient(
-                to top,
-                rgba(0, 0, 255, calc(-1 * var(--shap-value))),
-                rgba(255, 0, 0, var(--shap-value))
-            );
-        }
-        </style>
-        """
-
-        # Combine the JavaScript, CSS, and the plot HTML
-        html = f"<html><head>{shap_js}{css_styles}</head><body>{shap_html}</body></html>"
-
-        # Display in Streamlit
-        components.html(html, height=400, scrolling=True)
+        # Display the custom colored HTML in Streamlit
+        st.markdown(shap_html, unsafe_allow_html=True)
