@@ -88,16 +88,6 @@ def predict_proba(texts):
     probs = torch.nn.functional.softmax(logits, dim=1)
     return probs.cpu().numpy()
 
-
-# Function to map SHAP values to colors
-def shap_values_to_colors(values, cmap_name='RdBu'):
-    max_val = np.max(np.abs(values))
-    norm = matplotlib.colors.Normalize(vmin=-max_val, vmax=max_val)
-    cmap = matplotlib.cm.get_cmap(cmap_name)
-    colors = [matplotlib.colors.rgb2hex(cmap(norm(value))) for value in values]
-    return colors
-
-
 # Streamlit interface
 st.title("Análise sobre P. Pedag.")
 
@@ -135,19 +125,21 @@ if st.button("Analisar"):
         
         # Display SHAP text plot
         #st_shap(shap.plots.text(shap_values[0]), width=800, height=400)
-        # Extract tokens and SHAP values
-        tokens = shap_values.data[0]
-        values = shap_values.values[0][:, class_id]  # Use SHAP values for the predicted class
+        # Display SHAP text plot with additional styles
+        shap_html = shap.plots.text(shap_values[0], display=False)
 
-        # Map SHAP values to colors
-        colors = shap_values_to_colors(values)
+        # Define custom CSS to force colors on tokens
+        custom_css = """
+        <style>
+        .shap span[data-shap] {
+            color: inherit !important; /* Ensure SHAP token colors show */
+        }
+        </style>
+        """
 
-        # Create HTML with colored tokens
-        html_tokens = [
-            f'<span style="color:{color}">{token}</span>'
-            for token, color in zip(tokens, colors)
-        ]
-        shap_html = ' '.join(html_tokens)
+        # Combine custom CSS with the SHAP HTML output
+        html_content = f"<html><head>{shap.getjs()}{custom_css}</head><body>{shap_html}</body></html>"
 
-        # Display the custom colored HTML in Streamlit
-        st.markdown(shap_html, unsafe_allow_html=True)
+        # Display in Streamlit
+        components.html(html_content, height=400, scrolling=True)
+
