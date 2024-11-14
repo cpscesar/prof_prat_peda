@@ -117,11 +117,13 @@ if st.button("Analisar"):
 
         st.write(
             f"Explicação para a frase na classe {class_id}: \n\n"
-            "- **Vermelho**: destaca as palavras mais relevantes para classificar a frase nesta categoria.\n"
-            "- **Azul**: destaca as palavras menos relevantes para a classificação.\n"
-            "- **Intensidade da cor**: quanto mais intensa a tonalidade, maior a influência da palavra para a previsão.\n\n"
-            "Palavras em vermelho têm um impacto positivo para a classe atual, enquanto palavras em azul podem indicar menos relevância para esta classe."
+            "- **Setas vermelhas**: indicam as palavras que contribuem positivamente para classificar a frase nesta categoria.\n"
+            "- **Setas azuis**: indicam as palavras que têm menor contribuição ou uma influência negativa para a classificação.\n"
+            "- **Interatividade**: ao passar o mouse sobre uma seta, a palavra correspondente é sublinhada, e ao passar o mouse sobre a palavra, a seta correspondente é destacada.\n\n"
+            "Essas setas vermelhas e azuis ajudam a entender quais palavras influenciam a predição e em qual direção.\n\n"
+            "**Dica**: Se o fundo da janela estiver preto, clique em 'Settings' (configurações) no canto superior direito e altere para o modo de visualização 'Light' para melhorar a visibilidade das setas."
         )
+
         
         # Display SHAP text plot
         #st_shap(shap.plots.text(shap_values[0]), width=800, height=400)
