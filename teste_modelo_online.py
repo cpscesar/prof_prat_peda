@@ -25,6 +25,11 @@ from google.oauth2 import service_account
 import os
 import tempfile
 
+import re
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+
 # Function to download model files from Google Cloud Storage
 def download_model_files():
     # Load credentials directly from Streamlit secrets
