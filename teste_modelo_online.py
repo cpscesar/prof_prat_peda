@@ -105,7 +105,7 @@ if st.button("Analisar"):
         # Predict the class and display the probability of each class
         probabilities = predict_proba([input_text])[0]
         class_id = probabilities.argmax()
-        st.write(f"Classe prevista: {class_id} \n \n - (Output/Classe 0) Valor 0 se apenas citou as práticas pedagógicas, sem justificar \n - (Output/Classe 1) Valor 1 se citou as práticas pedagógicas e justificou de maneira difusa  \n - (Output/Classe 2) Valor 2 se citou as práticas pedagógicas e apresentou um argumento estruturado do porquê do uso dela  \n - (Output/Classe 3) Valor 3 se citou as práticas pedagógicas, apresentou um argumento estruturado do porquê do uso dela e apresentou uma autoavaliação da própria prática")
+        st.write(f"Classe prevista: {class_id} \n \n - (Output/Classe 0): Resposta inválida \n - (Output/Classe 1) Justifica e apresenta relação entre a prática e os resultados esperados, mas de forma vaga \n - (Output/Classe 2) Justifica e apresenta argumentação entre a relação da prática pedagógica, as características dos conteúdos complexos e os resultados esperados  \n - (Output/Classe 3) Justifica e apresenta argumentação entre a relação da prática pedagógica, as características dos conteúdos complexos e os resultados esperados e apresenta situações de impacto da prática pedagógica na aprendizagem dos estudantes")
         st.write("Probabilidades por classe:")
         for i, prob in enumerate(probabilities):
             st.write(f"Classe {i}: {prob:.2f}")
