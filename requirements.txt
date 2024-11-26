@@ -8,3 +8,4 @@ matplotlib                  # For plotting (used by SHAP for text visualizations
 transformers                # For loading the BERT model and tokenizer
 google-cloud-storage        # For accessing files from Google Cloud Storage
 plotly
+nltk
