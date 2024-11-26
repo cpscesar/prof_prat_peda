@@ -60,6 +60,24 @@ model.eval()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
+# Função para limpar o texto
+def clean_text_pt(text):
+    # Letras minusculas
+    text = text.lower()
+    # Sem caracteres especiais
+    text = re.sub(r'[^a-zA-Z\sÀ-ú]', '', text)
+    # Tokenizar o texto
+    tokens = word_tokenize(text, language='portuguese')
+    # Tirar stop words
+    stop_words = set(stopwords.words('portuguese'))
+    filtered_tokens = [word for word in tokens if word not in stop_words]
+    # Lemmatizar as palavras
+    lemmatizer = WordNetLemmatizer()
+    lemmatized_tokens = [lemmatizer.lemmatize(word) for word in filtered_tokens]
+    
+    cleaned_text = ' '.join(lemmatized_tokens)
+    return cleaned_text
+
 # Prediction function
 def predict_proba(texts):
     if isinstance(texts, str):
@@ -68,6 +86,9 @@ def predict_proba(texts):
         texts = texts.tolist()
     elif not isinstance(texts, list):
         raise ValueError("Unsupported format for 'texts' in 'predict_proba'")
+
+    # Clean the input texts
+    cleaned_texts = [clean_text_pt(text) for text in texts]
     
     # Tokenize the text and convert to tensors
     inputs = tokenizer(
