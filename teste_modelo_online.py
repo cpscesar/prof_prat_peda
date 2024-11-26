@@ -31,9 +31,9 @@ nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
+# from nltk.tokenize import word_tokenize
+# from nltk.corpus import stopwords
+# from nltk.stem import WordNetLemmatizer
 
 # Function to download model files from Google Cloud Storage
 def download_model_files():
